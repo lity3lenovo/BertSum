@@ -1,0 +1,116 @@
+【创建字典】
+1.通过关键字dict和关键字参数创建
+>>> dic = dict(spam = 1, egg = 2, bar =3)
+>>> dic
+{'bar': 3, 'egg': 2, 'spam': 1}
+
+2.通过二元组列表创建
+>>> list = [('spam', 1), ('egg', 2), ('bar', 3)]
+>>> dic = dict(list)
+>>> dic
+{'bar': 3, 'egg': 2, 'spam': 1}
+
+3.dict和zip结合创建
+>>> dic = dict(zip('abc', [1, 2, 3]))
+>>> dic
+{'a': 1, 'c': 3, 'b': 2}
+
+4.通过字典推导式创建
+>>> dic = {i:2*i for i in range(3)}
+>>> dic
+{0: 0, 1: 2, 2: 4}
+
+5.通过dict.fromkeys()创建
+通常用来初始化字典, 设置value的默认值
+
+>>> dic = dict.fromkeys(range(3), 'x')
+>>> dic
+{0: 'x', 1: 'x', 2: 'x'}
+
+6.其他
+>>> list = ['x', 1, 'y', 2, 'z', 3]
+>>> dic = dict(zip(list[::2], list[1::2]))
+>>> dic
+{'y': 2, 'x': 1, 'z': 3}
+
+【Ndarray数据类型转换】
+import numpy as np
+arr1=np.array([0,1,2])
+arr2=np.array([0,1.8,2])
+arr3=np.array([0,1.8,'2'])
+#astype()函数实现ndarray数据类型转换
+#浮点型转整型
+arr4=np.array([3.7,-1.2,-2.6])
+arr5=arr4.astype(np.int)
+#字符串转浮点型
+arr6=np.array(['3.7','-1.2','-2.6'])
+arr7=arr6.astype(np.float)
+#字符串转浮点型
+arr8=arr6.astype(arr4.dtype)
+
+【ndarray元素访问】
+arr9=np.array([[5,10,15],[20,25,30]])
+print(arr9[1,1]
+>>25#arr9保持不变
+【ndarray元素切片】
+arr10=np.arange(10)
+arr_slice=arr10(5:9)
+arr_slice[0]=0
+print(arr10)
+>>[0 1 2 3 4 0 6 7 8 9]
+
+# 多维数组
+arr11=np.random.randint(10,size=(2,3,4),dtype=np.int)
+print(arr11)
+>>[[[7 9 8 6]
+  [7 2 2 7]
+  [8 9 8 3]]
+
+ [[3 9 2 9]
+  [2 7 5 2]
+  [8 2 3 3]]]
+#多维数组切片
+arr12[0, 1:2, 1:3]
+arr12[:2, :2, 2:]
+arr12[:2, 1]
+
+【python数据相关性分析】
+
+【python时间】
+#本地时间，注：time.time()是时间戳
+localtime = time.localtime(time.time())
+
+【在python的单个脚本中顺序的执行批量的脚本】
+#coding=gbk
+
+import sys
+
+import train_task1
+#释放内存
+sys.modules['train_task1'].__dict__.clear()
+import train_task2
+sys.modules['train_task2'].__dict__.clear()
+import train_task3
+sys.modules['train_task3'].__dict__.clear()
+
+【python内存管理及释放】
+del 可以删除多个变量，del a,b,c,d
+办法：
+import gc （garbage collector）
+del a
+gc.collect()
+
+
+如果你是指在自己的程序中想删除所有全局变量的话，可以自己编写一个clear函数，通过globals()获取全局变量然后将其中不需要的内容删除，例如下面的程序保留函数，类，模块，删除所有其它全局变量：
+
+def clear():
+
+    for key, value in globals().items():
+
+        if callable(value) or value.__class__.__name__ == "module":
+
+            continue
+
+        del globals()[key]
+
+不过程序中应该避免这种对全局变量的依赖。你也可以在IPython下用此函数清空全局变量。

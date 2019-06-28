@@ -1,0 +1,26 @@
+*****当前的本地工作目录：C:\Users\lity3\Documents\GitHub\BertSum\src\Weibo_Dataset
+ip:10.120.108.18:22
+数据专用目录: /data/lity
+jupyter notebook工作目录：cd jupyter_workspace/
+用jupyter notebook 自定义新工作目录：jupyter notebook home/appadmin/lity/BertSum
+激活环境 source activate py36_tf1.11_gpu 或 source activate pytorch
+free -g查看内存
+df -h查看剩余存储
+du -sh
+du -sh b*
+du -sh *
+查看python3安装路径：whereis python3 (windows下用where python)
+查看用pip安装的软件包和版本：python3 -m pip list 或者pip freeze
+查看pip安装的软件包路径： pip show beautifulsoup4
+
+BertSum 预处理流程
+export CLASSPATH=/home/appadmin/stanford-corenlp-full-2017-06-09/stanford-corenlp-3.8.0.jar
+python preprocess.py -mode tokenize -raw_path ../raw_stories -save_path TOKENIZED_PATH
+python preprocess.py -mode format_to_lines -raw_path TOKENIZED_PATH -save_path JSON_PATH -map_path MAP_PATH -lower
+python preprocess.py -mode format_to_bert -raw_path JSON_PATH -save_path BERT_DATA_PATH -oracle_mode greedy -n_cpus 4 -log_file ../logs/preprocess.log
+BertSum训练（依赖pytorch_pretrained_bert)
+python train.py -mode train -encoder transformer -dropout 0.1 -bert_data_path ../bert_data/cnndm -model_path ../models/bert_transformer -lr 2e-3 -save_checkpoint_steps 50 -visible_gpus -1 -gpu_ranks 0 -world_size 1 
+BertSum验证算ROUGE
+python train.py -mode validate -bert_data_path ../bert_data/cnndm -model_path ../models/bert_transformer -visible_gpus 0 -gpu_ranks 0 -batch_size 30000 -log_file ../logs/cnndm.log -test_all -block_trigram true
+BertSum测试
+python train.py -mode test -bert_data_path ../bert_data/cnndm -model_path ../models/bert_transformer -test_from ../models/bert_transformer/model_step_900.pt -visible_gpus 0 -gpu_ranks 0 -batch_size 30000 -report_rouge False -log_file ../logs/cnndm.log -test_all -block_trigram true
